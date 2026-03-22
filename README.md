@@ -1,6 +1,11 @@
 # Node.js Express API
 
-API RESTful construida con Node.js y Express - **Versión 2.0 con JWT Authentication**
+[![CI/CD](https://github.com/alexkore12/nodejs-express-api/actions/workflows/ci.yml/badge.svg)](https://github.com/alexkore12/nodejs-express-api/actions)
+[![Node Version](https://img.shields.io/badge/node-18.x%2B-blue)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-ready-blue)](https://www.docker.com/)
+
+API RESTful construida con Node.js y Express - **Versión 2.1 con JWT Authentication y CI/CD**
 
 ## 🚀 Características
 
@@ -332,6 +337,13 @@ server {
 ```
 
 ## 📝 Changelog
+
+### v2.1.0 (2026-03-22)
+- ✅ GitHub Actions CI/CD Pipeline añadido
+- ✅ Workflow de tests (multi-version Node.js), linting y seguridad
+- ✅ Badges de estado en README
+- ✅ Build Docker automático
+- ✅ Dependabot configurado
 
 ### v2.0.0 (2026-03-22)
 - ✅ Autenticación JWT completa
