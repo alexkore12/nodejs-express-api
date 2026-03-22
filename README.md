@@ -84,6 +84,8 @@ NODE_ENV=development
 - CORS: Control de accesos
 - Input validation: Joi schemas
 - Error handling: Errores controlados sin leakage
+- **Grype**: Escaneo de vulnerabilidades (alternativa a Trivy)
+- ⚠️ **Trivy comprometido**: Supply chain attack (marzo 2026)
 
 ## Contributing
 
