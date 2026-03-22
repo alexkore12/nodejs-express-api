@@ -1,10 +1,12 @@
 # Node.js Express API
 
-API RESTful construida con Node.js y Express - **Versión 1.1.0 con Tests**
+API RESTful construida con Node.js y Express - **Versión 2.0 con JWT Authentication**
 
 ## 🚀 Características
 
 - **Express.js** - Framework web minimalista y flexible
+- **JWT Authentication** - Tokens seguros para autenticación
+- **Rate Limiting** - Protección contra abuso (100 req/min)
 - **Helmet** - Headers de seguridad HTTP
 - **CORS** - Control de accesos cross-origin
 - **Joi** - Validación de esquemas
@@ -14,6 +16,15 @@ API RESTful construida con Node.js y Express - **Versión 1.1.0 con Tests**
 - **Tests completos** - Jest + Supertest
 
 ## 📋 Endpoints
+
+### Autenticación
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/auth/login` | Obtener token JWT |
+| GET | `/auth/me` | Usuario actual |
+
+### Items (Protegidos)
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
@@ -65,6 +76,39 @@ docker run -p 3000:3000 express-api
 
 # Docker Compose
 docker-compose up -d
+```
+
+## 🔐 Autenticación JWT
+
+### Obtener Token
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "admin123"}'
+```
+
+Respuesta:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 1800
+}
+```
+
+### Usar Token
+
+```bash
+curl http://localhost:3000/api/items \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### Obtener Usuario Actual
+
+```bash
+curl http://localhost:3000/auth/me \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ## 📖 Documentación de la API
@@ -132,6 +176,8 @@ curl -X DELETE http://localhost:3000/api/items/{id}
 | `PORT` | Puerto del servidor | `3000` |
 | `NODE_ENV` | Entorno | `development` |
 | `CORS_ORIGIN` | Origen CORS permitido | `*` |
+| `JWT_SECRET` | Clave secreta JWT | (configurable) |
+| `JWT_EXPIRY` | Tiempo de expiración JWT | `30m` |
 
 ## 📁 Estructura del Proyecto
 
@@ -231,8 +277,20 @@ npm run test:watch
 ### Validación
 
 - ✅ Joi schemas para validación de input
-- ✅ Límite de tamaño de payload
+- ✅ Límite de tamaño de payload (10kb)
 - ✅ Sanitización de entrada
+
+### Rate Limiting
+
+- ✅ 100 requests/minuto (endpoints normales)
+- ✅ 10 requests/minuto (autenticación)
+- ✅ Headers estándar (RateLimit-*)
+
+### JWT Authentication
+
+- ✅ Tokens JWT con expiración configurable
+- ✅ Middleware de autenticación
+- ✅ Soporte para roles (admin/user)
 
 ### Headers de Response
 
@@ -274,6 +332,14 @@ server {
 ```
 
 ## 📝 Changelog
+
+### v2.0.0 (2026-03-22)
+- ✅ Autenticación JWT completa
+- ✅ Rate Limiting (express-rate-limit)
+- ✅ Módulo auth.js separado
+- ✅ Endpoints /auth/login y /auth/me
+- ✅ Límite de payload (10kb)
+- ✅ Mejoras de seguridad
 
 ### v1.1.0 (2026-03-22)
 - ✅ Suite completa de tests (api.test.js)
