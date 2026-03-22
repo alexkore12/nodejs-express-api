@@ -1,57 +1,39 @@
 # Security Policy
 
-## 🔴 Recent Security Alerts
-
-### Trivy Supply Chain Attack (March 2026)
-
-**⚠️ ALERT:** Trivy versions 0.69.4 and GitHub Actions (aquasecurity/setup-trivy, aquasecurity/trivy-action) have been compromised in a supply chain attack. 
-
-**Recommendations:**
-1. **Do NOT use** Trivy v0.69.4
-2. **Do NOT use** the compromised GitHub Actions
-3. Use alternative scanners: Grype, Checkov
-4. Pin to specific known-good versions
-
-**For this Node.js project:**
-- Use `npm audit` for dependency scanning
-- Use Snyk or GitHub Dependabot
-- Consider using Grype as container scanner instead of Trivy
-
 ## Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.x     | ✅                 |
-| < 1.0   | ❌ End of Life     |
+| 1.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it via GitHub Issues.
+Report security issues via GitHub Issues or contact the owner.
 
-## Security Best Practices for This Project
+## Security Best Practices
 
-### Dependencies
-```bash
-# Audit dependencies
-npm audit
+- Store credentials in environment variables
+- Never commit .env files or secrets
+- Use HTTPS in production
+- Implement proper authentication (JWT, sessions)
+- Enable CORS with explicit origins
+- Use helmet.js for security headers
+- Implement rate limiting
+- Sanitize all user inputs
 
-# Use audit in CI
-npm audit --audit-level=high
-```
+## Node.js Security
 
-### Production
-1. **HTTPS only** - Use reverse proxy (nginx, traefik)
-2. **Environment variables** - Never commit secrets
-3. **Helmet** - Already configured ✅
-4. **Rate limiting** - Add express-rate-limit
-5. **CORS** - Restrict domains in production
+- Keep Node.js and npm packages updated
+- Use `npm audit` for vulnerability scanning
+- Enable Dependabot security alerts
+- Implement proper error handling
+- Use secure cookie settings
+- Enable CSRF protection
 
-### Docker Security
-```bash
-# Scan images with Grype instead of Trivy
-grype node:18-alpine
-```
+## Recommended Security Packages
 
----
-
-*Last updated: 2026-03-21*
+- `helmet` - Security headers
+- `express-rate-limit` - Rate limiting
+- `express-validator` - Input validation
+- `bcrypt` - Password hashing
+- `jsonwebtoken` - JWT handling
