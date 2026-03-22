@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const apiRoutes = require('./routes/api');
 const { errorHandler } = require('./middleware/errorHandler');
+const { securityHeadersMiddleware, requestIdMiddleware } = require('./middleware/security');
 const { login, getMe, authenticate } = require('./auth');
 
 const app = express();
@@ -38,6 +39,8 @@ const authLimiter = rateLimit({
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
+app.use(securityHeadersMiddleware);
+app.use(requestIdMiddleware);
 
 // Apply rate limiting
 app.use(limiter);
@@ -52,7 +55,7 @@ app.get('/health', (req, res) => {
     status: 'healthy', 
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    version: '2.0.0'
+    version: '2.1.0'
   });
 });
 
