@@ -139,6 +139,7 @@ curl -X DELETE http://localhost:3000/api/items/{id}
 nodejs-express-api/
 ├── src/
 │   ├── index.js              # Entry point
+│   ├── mcp-server.js         # MCP Server (Model Context Protocol)
 │   ├── routes/
 │   │   └── api.js           # Rutas de API
 │   ├── middleware/
@@ -152,6 +153,44 @@ nodejs-express-api/
 ├── docker-compose.yaml
 ├── .env.example
 └── README.md
+```
+
+## 🤖 MCP Server (Model Context Protocol)
+
+Esta API incluye un servidor MCP para integración con AI Agents.
+
+### ¿Qué es MCP?
+
+MCP (Model Context Protocol) es el protocolo emergente para herramientas de AI agents. Permite que modelos de IA interactúen con herramientas externas de forma estandarizada.
+
+**Referencia**: https://modelcontextprotocol.io
+
+### Endpoints MCP
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/mcp/tools/list` | Listar herramientas disponibles |
+| POST | `/mcp/tools/call` | Ejecutar una herramienta |
+| GET | `/mcp/resources/list` | Listar recursos disponibles |
+| GET | `/mcp/resources/:uri` | Obtener recurso |
+| GET | `/mcp/health` | Health check |
+
+### Herramientas Disponibles
+
+- **get_server_status**: Estado del servidor
+- **search_users**: Buscar usuarios  
+- **create_notification**: Crear notificación
+
+### Ejemplo de uso
+
+```bash
+# Listar herramientas
+curl http://localhost:3000/mcp/tools/list
+
+# Obtener estado del servidor
+curl -X POST http://localhost:3000/mcp/tools/call \
+  -H "Content-Type: application/json" \
+  -d '{"name": "get_server_status", "arguments": {"includeMetrics": true}}'
 ```
 
 ## 🧪 Testing
