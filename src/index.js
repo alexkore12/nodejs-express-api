@@ -9,6 +9,7 @@ const apiRoutes = require('./routes/api');
 const { errorHandler } = require('./middleware/errorHandler');
 const { securityHeadersMiddleware, requestIdMiddleware } = require('./middleware/security');
 const { login, getMe, authenticate } = require('./auth');
+const { getHealthStatus, deepHealthCheck } = require('./healthcheck');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -49,14 +50,15 @@ app.use(limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Health check (público)
+// Health check endpoints (públicos)
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    version: '2.1.0'
-  });
+  const health = getHealthStatus();
+  res.status(health.status === 'healthy' ? 200 : 503).json(health);
+});
+
+app.get('/health/ready', async (req, res) => {
+  const health = await deepHealthCheck();
+  res.status(health.status === 'healthy' ? 200 : 503).json(health);
 });
 
 // Auth endpoints (with stricter rate limiting)
