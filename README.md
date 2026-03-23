@@ -1,8 +1,8 @@
 # Node.js Express API
 
-API RESTful construida con Node.js y Express - **Versión 1.1.0 con Tests**
+API RESTful construída con Node.js y Express - Versión 1.2.0 con Tests Completos y CI/CD
 
-## 🚀 Características
+## Características
 
 - **Express.js** - Framework web minimalista y flexible
 - **Helmet** - Headers de seguridad HTTP
@@ -12,19 +12,27 @@ API RESTful construida con Node.js y Express - **Versión 1.1.0 con Tests**
 - **UUID** - Identificadores únicos por request
 - **Logging estructurado** - Logs en formato JSON
 - **Tests completos** - Jest + Supertest
+- **CI/CD** - GitHub Actions integrado
 
-## 📋 Endpoints
+## Endpoints
+
+### Health Check
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/health` | Health check con métricas |
+
+### Items CRUD
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
 | GET | `/api/items` | Listar todos los items |
 | GET | `/api/items/:id` | Obtener item por ID |
 | POST | `/api/items` | Crear nuevo item |
 | PUT | `/api/items/:id` | Actualizar item |
 | DELETE | `/api/items/:id` | Eliminar item |
 
-## 🛠️ Instalación
+## Instalación
 
 ```bash
 # Clonar repositorio
@@ -38,23 +46,45 @@ npm install
 cp .env.example .env
 ```
 
-## ▶️ Ejecución
+## Configuración
+
+### Variables de Entorno
+
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `PORT` | Puerto del servidor | 3000 |
+| `NODE_ENV` | Entorno | development |
+| `CORS_ORIGIN` | Origen CORS permitido | * |
+
+## Uso
+
+### Desarrollo
 
 ```bash
-# Desarrollo (con hot reload)
+# Con hot reload
 npm run dev
+```
 
-# Producción
+### Producción
+
+```bash
 npm start
+```
 
-# Tests
+### Tests
+
+```bash
+# Ejecutar todos los tests
 npm test
 
 # Tests en modo watch
 npm run test:watch
+
+# Coverage
+npm test -- --coverage
 ```
 
-## 🐳 Docker
+## Docker
 
 ```bash
 # Build
@@ -67,7 +97,7 @@ docker run -p 3000:3000 express-api
 docker-compose up -d
 ```
 
-## 📖 Documentación de la API
+## Ejemplos de Uso
 
 ### Health Check
 
@@ -125,15 +155,7 @@ curl -X PUT http://localhost:3000/api/items/{id} \
 curl -X DELETE http://localhost:3000/api/items/{id}
 ```
 
-## ⚙️ Variables de Entorno
-
-| Variable | Descripción | Default |
-|----------|-------------|---------|
-| `PORT` | Puerto del servidor | `3000` |
-| `NODE_ENV` | Entorno | `development` |
-| `CORS_ORIGIN` | Origen CORS permitido | `*` |
-
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 nodejs-express-api/
@@ -141,13 +163,16 @@ nodejs-express-api/
 │   ├── index.js              # Entry point
 │   ├── mcp-server.js         # MCP Server (Model Context Protocol)
 │   ├── routes/
-│   │   └── api.js           # Rutas de API
+│   │   └── api.js            # Rutas de API
 │   ├── middleware/
-│   │   ├── errorHandler.js  # Manejo de errores
-│   │   └── logger.js        # Logging estructurado
-│   └── models/              # Modelos de datos
+│   │   ├── errorHandler.js   # Manejo de errores
+│   │   └── logger.js         # Logging estructurado
+│   └── models/               # Modelos de datos
 ├── tests/
-│   └── api.test.js          # Suite de tests (v1.1.0)
+│   └── api.test.js           # Suite de tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml            # GitHub Actions CI/CD
 ├── package.json
 ├── Dockerfile
 ├── docker-compose.yaml
@@ -155,15 +180,13 @@ nodejs-express-api/
 └── README.md
 ```
 
-## 🤖 MCP Server (Model Context Protocol)
+## MCP Server (Model Context Protocol)
 
 Esta API incluye un servidor MCP para integración con AI Agents.
 
-### ¿Qué es MCP?
-
 MCP (Model Context Protocol) es el protocolo emergente para herramientas de AI agents. Permite que modelos de IA interactúen con herramientas externas de forma estandarizada.
 
-**Referencia**: https://modelcontextprotocol.io
+Referencia: [https://modelcontextprotocol.io](https://modelcontextprotocol.io)
 
 ### Endpoints MCP
 
@@ -177,11 +200,11 @@ MCP (Model Context Protocol) es el protocolo emergente para herramientas de AI a
 
 ### Herramientas Disponibles
 
-- **get_server_status**: Estado del servidor
-- **search_users**: Buscar usuarios  
-- **create_notification**: Crear notificación
+- `get_server_status` - Estado del servidor
+- `search_users` - Buscar usuarios
+- `create_notification` - Crear notificación
 
-### Ejemplo de uso
+### Ejemplos MCP
 
 ```bash
 # Listar herramientas
@@ -193,20 +216,7 @@ curl -X POST http://localhost:3000/mcp/tools/call \
   -d '{"name": "get_server_status", "arguments": {"includeMetrics": true}}'
 ```
 
-## 🧪 Testing
-
-### Tests Incluidos (v1.1.0)
-
-```bash
-# Ejecutar todos los tests
-npm test
-
-# Tests con coverage
-npm test -- --coverage
-
-# Modo watch
-npm run test:watch
-```
+## Tests
 
 ### Cobertura de Tests
 
@@ -218,9 +228,22 @@ npm run test:watch
 | Input Validation | ✅ Empty name, negative price, missing fields |
 | Error Handling | ✅ 404, error format |
 
-## 🔒 Seguridad
+### Ejecutar Tests
 
-### Headers de Seguridad (Helmet)
+```bash
+# Todos los tests
+npm test
+
+# Con coverage
+npm test -- --coverage
+
+# Modo watch
+npm run test:watch
+```
+
+## Seguridad
+
+### Headers de Seguridad
 
 - ✅ Content Security Policy
 - ✅ X-Frame-Options
@@ -233,15 +256,12 @@ npm run test:watch
 - ✅ Joi schemas para validación de input
 - ✅ Límite de tamaño de payload
 - ✅ Sanitización de entrada
-
-### Headers de Response
-
 - ✅ X-Request-ID - ID único por request
 - ✅ X-Response-Time - Tiempo de procesamiento
 
-## 🚀 Despliegue Recomendado
+## Despliegue
 
-### PM2 (Producción)
+### PM2
 
 ```bash
 # Instalar PM2
@@ -255,7 +275,7 @@ pm2 startup
 pm2 save
 ```
 
-### Nginx como Reverse Proxy
+### Nginx
 
 ```nginx
 server {
@@ -273,29 +293,49 @@ server {
 }
 ```
 
-## 📝 Changelog
+## CI/CD
 
-### v1.1.0 (2026-03-22)
-- ✅ Suite completa de tests (api.test.js)
-- ✅ Dependencia supertest añadida
-- ✅ Scripts de test mejorados
-- ✅ Coverage configurado
-- ✅ Documentación de tests
+El proyecto incluye GitHub Actions para CI/CD automático.
 
-### v1.0.0 (2026-03-21)
-- ✅ Versión inicial
-- ✅ CRUD completo
-- ✅ Express + Helmet + CORS + Morgan
-- ✅ Joi validation
+### Workflow
 
-## 🤖 Generado por
+1. **Lint** - Verificación de código
+2. **Test** - Ejecución de tests
+3. **Build** - Construcción de imagen Docker
+4. **Security** - Escaneo de vulnerabilidades
 
-Este proyecto fue creado y actualizado por **OpenClaw AI Assistant**.
+### Configurar Secrets
 
-## 📄 Licencia
+```bash
+# En GitHub repository settings
+DOCKER_USERNAME=your_username
+DOCKER_PASSWORD=your_password
+```
 
-MIT License
+## Changelog
 
----
+- ✅ v1.2.0 - GitHub Actions CI/CD añadido
+- ✅ v1.1.0 - Suite completa de tests
+- ✅ v1.0.0 - Versión inicial
 
-**GitHub**: [alexkore12](https://github.com/alexkore12)
+## Tecnologías
+
+- Node.js
+- Express.js
+- Helmet
+- CORS
+- Morgan
+- Joi
+- UUID
+- Jest
+- Supertest
+
+## Licencia
+
+MIT
+
+## Autor
+
+GitHub: [alexkore12](https://github.com/alexkore12)
+
+Este proyecto fue creado y actualizado por OpenClaw AI Assistant.
