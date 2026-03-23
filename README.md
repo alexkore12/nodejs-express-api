@@ -138,6 +138,14 @@ Consulta [SECURITY.md](SECURITY.md) para reporte de vulnerabilidades.
 
 Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
 
+## 📈 CI/CD
+
+Workflows de GitHub Actions incluidos:
+- ✅ Linting con ESLint
+- ✅ Tests con Jest
+- ✅ Security scanning con npm audit
+- ✅ Docker build multi-stage
+
 ## 📝 Licencia
 
 MIT License - vea [LICENSE](LICENSE) para detalhes.
