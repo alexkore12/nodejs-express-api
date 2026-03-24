@@ -72,73 +72,107 @@ docker-compose up -d
 
 ```
 nodejs-express-api/
-├── src/
-│   ├── app.js              # Configuración de Express
-│   ├── server.js           # Entry point
-│   ├── config/             # Configuración
-│   │   ├── index.js
-│   │   ├── database.js
-│   │   └── logger.js
-│   ├── routes/             # Definición de rutas
-│   │   ├── index.js
-│   │   ├── users.js
-│   │   ├── auth.js
-│   │   └── health.js
-│   ├── controllers/        # Lógica de negocio
-│   │   ├── userController.js
-│   │   ├── authController.js
-│   │   └── healthController.js
-│   ├── middleware/          # Middlewares personalizados
-│   │   ├── auth.js
-│   │   ├── validator.js
-│   │   ├── rateLimiter.js
-│   │   └── errorHandler.js
-│   ├── models/             # Modelos de datos
-│   ├── services/           # Servicios externos
-│   ├── utils/              # Utilidades
-│   └── tests/              # Tests
-├── prisma/
-│   └── schema.prisma        # Schema de BD (si usa Prisma)
+├── .dockerignore
 ├── .env.example
-├── .grype.yaml             # Config de seguridad
+├── .gitattributes
+├── .github/workflows/ci.yml
+├── .gitignore
+├── .grype.yaml              # Grype vulnerability scanner config
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── deploy.sh                 # Script de despliegue
 ├── docker-compose.yaml
 ├── Dockerfile
-├── Makefile
-├── SECURITY.md
-├── CONTRIBUTING.md
+├── health_check.py          # Health check script
 ├── LICENSE
-└── README.md
+├── Makefile
+├── MONITORING.md            # Métricas y monitoreo
+├── monitor.sh                # Script principal de monitoreo
+├── package.json
+├── rate-limiter.js           # Rate limiting standalone script
+├── README.md
+├── scripts/
+│   └── setup.sh             # Script de instalación
+├── SECURITY.md
+├── setup.sh                 # Script de inicialización
+├── src/
+│   ├── index.js              # Entry point principal
+│   ├── auth.js               # Lógica de autenticación
+│   ├── healthcheck.js        # Endpoints de health check
+│   ├── mcp-server.js         # MCP server integration
+│   ├── middleware/
+│   │   ├── auth.js           # Middleware de autenticación
+│   │   ├── errorHandler.js   # Manejo centralizado de errores
+│   │   └── security.js       # Headers de seguridad (Helmet)
+│   └── routes/
+│       └── api.js            # Definición de rutas API
+└── tests/
+    └── api.test.js           # Tests de la API
 ```
 
 ## 📚 API Endpoints
 
-### Autenticación
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register` | Registro de usuario |
-| POST | `/api/v1/auth/login` | Inicio de sesión |
-| POST | `/api/v1/auth/refresh` | Refrescar token |
-| POST | `/api/v1/auth/logout` | Cerrar sesión |
-| POST | `/api/v1/auth/forgot-password` | Recuperar contraseña |
-| POST | `/api/v1/auth/reset-password` | Resetear contraseña |
-
-### Usuarios
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/v1/users` | Listar usuarios (admin) |
-| GET | `/api/v1/users/:id` | Obtener usuario |
-| PUT | `/api/v1/users/:id` | Actualizar usuario |
-| DELETE | `/api/v1/users/:id` | Eliminar usuario |
-
 ### Health
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/health/ready` | Readiness probe |
-| GET | `/health/live` | Liveness probe |
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/health` | Health check básico | No |
+| GET | `/health/ready` | Readiness probe | No |
+
+### Autenticación
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/auth/login` | Inicio de sesión | No |
+| GET | `/auth/me` | Usuario actual | Yes |
+
+### Items (API principal)
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/items` | Listar todos los items | No |
+| GET | `/api/items/:id` | Obtener item por ID | No |
+| POST | `/api/items` | Crear nuevo item | No |
+| PUT | `/api/items/:id` | Actualizar item | No |
+| DELETE | `/api/items/:id` | Eliminar item | No |
+
+### Ejemplos con curl
+
+```bash
+# Health check
+curl http://localhost:3000/health
+
+# Login
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "secret"}'
+
+# Listar items
+curl http://localhost:3000/api/items
+
+# Crear item
+curl -X POST http://localhost:3000/api/items \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Item test", "description": "Test", "price": 19.99}'
+
+# Actualizar item
+curl -X PUT http://localhost:3000/api/items/{id} \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Item actualizado"}'
+
+# Eliminar item
+curl -X DELETE http://localhost:3000/api/items/{id}
+```
+
+### Respuestas de Error
+
+| Código | Significado |
+|--------|-------------|
+| 400 | Bad Request — validación fallida |
+| 401 | Unauthorized — credenciales inválidas |
+| 404 | Not Found — recurso no existe |
+| 429 | Too Many Requests — rate limit excedido |
+| 500 | Internal Server Error |
 
 ## 🔐 Seguridad
 
