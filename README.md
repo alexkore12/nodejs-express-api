@@ -46,6 +46,7 @@ npm run dev
 
 ### Producción
 
+```bash
 # O ejecutar en producción
 npm start
 ```
@@ -87,7 +88,8 @@ Una vez ejecutando, visita:
 nodejs-express-api/
 ├── .dockerignore
 ├── .env.example
-├── .github/workflows/ci.yml
+├── .github/workflows/
+│   └── ci.yml
 ├── .gitignore
 ├── .grype.yaml
 ├── CODE_OF_CONDUCT.md
@@ -95,21 +97,42 @@ nodejs-express-api/
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
+├── MONITORING.md
 ├── README.md
 ├── SECURITY.md
 ├── docker-compose.yml
-├── index.js
+├── index.js                 # Legacy entry (deprecated, use src/)
 ├── package.json
-└── rate-limiter.js
+├── rate-limiter.js
+├── scripts/
+│   └── setup.sh
+├── src/
+│   ├── index.js             # Entry point principal
+│   ├── auth.js              # Authentication logic
+│   ├── healthcheck.js       # Health check endpoints
+│   ├── mcp-server.js        # MCP server integration
+│   ├── middleware/
+│   │   ├── auth.js          # Auth middleware
+│   │   ├── errorHandler.js  # Global error handler
+│   │   └── security.js      # Security headers (Helmet)
+│   └── routes/
+│       └── api.js           # API route definitions
+└── tests/
 ```
 
 ## 📝 API Endpoints
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/api/v1/status` | Estado de la API |
-| * | `/api/v1/*` | Endpoints de la API |
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/health` | Health check | No |
+| GET | `/api/v1/status` | Estado de la API | No |
+| POST | `/api/v1/auth/login` | Login | No |
+| GET | `/api/v1/auth/me` | Usuario actual | Yes |
+| GET | `/api/v1/items` | Listar items (paginación) | Yes |
+| POST | `/api/v1/items` | Crear item | Yes |
+| GET | `/api/v1/items/:id` | Obtener item por ID | Yes |
+| PUT | `/api/v1/items/:id` | Actualizar item | Yes |
+| DELETE | `/api/v1/items/:id` | Eliminar item | Yes |
 
 ### Ejecutar Tests
 
@@ -118,7 +141,7 @@ nodejs-express-api/
 npm test
 
 # Con coverage
-npm test -- --coverage
+npm run test:coverage
 
 # Modo watch
 npm run test:watch
@@ -127,16 +150,13 @@ npm run test:watch
 ## Seguridad
 
 - ✅ Escaneo con Grype
-- ✅ Helmet headers
-- ✅ Rate limiting
+- ✅ Helmet security headers
+- ✅ Rate limiting configurable
 - ✅ CORS configurado
 - ✅ Input validation
+- ✅ Security middleware (src/middleware/security.js)
 
 Consulta [SECURITY.md](SECURITY.md) para reporte de vulnerabilidades.
-
-## 🤝 Contribuir
-
-Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
 
 ## 📈 CI/CD
 
@@ -145,6 +165,12 @@ Workflows de GitHub Actions incluidos:
 - ✅ Tests con Jest
 - ✅ Security scanning con npm audit
 - ✅ Docker build multi-stage
+
+Ver [MONITORING.md](MONITORING.md) para detalles de monitoreo.
+
+## 🤝 Contribuir
+
+Lee [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
 
 ## 📝 Licencia
 
